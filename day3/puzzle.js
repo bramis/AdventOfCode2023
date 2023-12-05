@@ -5,6 +5,18 @@ const content = fs.readFileSync(filename, { encoding: "utf-8" });
 
 const lines = content.split("\n");
 
+function getAdjacentFromStr(str, indexFrom, indexTo) {
+  return str
+    .substring(
+      indexFrom > 0 ? indexFrom - 1 : indexFrom,
+      indexTo < str.length - 1
+        ? indexTo + 2
+        : indexTo
+    )
+    .split("")
+    .some((char) => char !== ".");
+}
+
 function getNumberFromMatch(match) {
   return Number(match[0]);
 }
@@ -34,15 +46,7 @@ const { validNumbers, validGears } = lines.reduce(({ validNumbers: numbers, vali
       
       const isUpAdjacent =
         currentIndex > 0 &&
-        linesArray[currentIndex - 1]
-          .substring(
-            indexFrom > 0 ? indexFrom - 1 : indexFrom,
-            indexTo < linesArray[currentIndex - 1].length - 1
-              ? indexTo + 2
-              : indexTo
-          )
-          .split("")
-          .some((char) => char !== ".");
+        getAdjacentFromStr(linesArray[currentIndex - 1], indexFrom, indexTo);
 
         if (value === '157') {
           
@@ -50,15 +54,7 @@ const { validNumbers, validGears } = lines.reduce(({ validNumbers: numbers, vali
 
       const isDownAdjacent =
         currentIndex + 1 <= linesArray.length - 1 &&
-        linesArray[currentIndex + 1]
-          .substring(
-            indexFrom > 0 ? indexFrom - 1 : indexFrom,
-            indexTo < linesArray[currentIndex + 1].length - 1
-              ? indexTo + 2
-              : indexTo
-          )
-          .split("")
-          .some((char) => char !== ".");
+        getAdjacentFromStr(linesArray[currentIndex + 1], indexFrom, indexTo);
 
       return (
         isRightAdjacent || isLeftAdjacent || isUpAdjacent || isDownAdjacent
